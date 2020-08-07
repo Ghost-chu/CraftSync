@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 public class PlayerSyncModule implements SyncModule {
     private final Logger logger = Logger.getLogger("PlayerSync");
+
     @Sync(field = "hp", type = SyncType.LOAD)
     public void loadPlayerHealth(@NotNull SyncDataContainer data) {
         double hp = Double.parseDouble(data.getData());
@@ -34,6 +35,21 @@ public class PlayerSyncModule implements SyncModule {
         return SyncDataContainer.builder()
                 .player(player)
                 .data(String.valueOf(player.getHealth()))
+                .build();
+    }
+
+    @Sync(field = "food", type = SyncType.LOAD)
+    public void loadPlayerFood(@NotNull SyncDataContainer data) {
+        int food = Integer.parseInt(data.getData());
+        data.getPlayer().setFoodLevel(food);
+    }
+
+    @NotNull
+    @Sync(field = "food", type = SyncType.SAVE)
+    public SyncDataContainer savePlayerFood(@NotNull Player player) {
+        return SyncDataContainer.builder()
+                .player(player)
+                .data(String.valueOf(player.getFoodLevel()))
                 .build();
     }
 
