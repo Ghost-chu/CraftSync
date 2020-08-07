@@ -5,6 +5,7 @@ import com.mcsunnyside.playersync.sync.SyncDataContainer;
 import com.mcsunnyside.playersync.sync.SyncModule;
 import com.mcsunnyside.playersync.sync.SyncType;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -196,6 +197,48 @@ public class PlayerSyncModule implements SyncModule {
                 .player(player)
                 .data(configuration.saveToString())
                 .build();
+    }
+
+
+    @Sync(field = "attributes", type = SyncType.LOAD)
+    public void loadPlayerAttribute(@NotNull SyncDataContainer data) {
+        YamlConfiguration configuration = new YamlConfiguration();
+        try {
+            configuration.load(data.getData());
+        } catch (IOException | InvalidConfigurationException ioException) {
+            ioException.printStackTrace();
+            logger.warning("Failed to sync player " + data.getPlayer().getName() + "'s attribute!");
+        }
+        for (Attribute value : Attribute.values()) {
+
+            //noinspection ConstantConditions
+            data.getPlayer().getAttribute(value).setBaseValue(configuration.getDouble("attribute." + value.getKey().getNamespace() + "." + value.getKey().getKey() + ".base", 1.0d));
+//            YamlConfiguration modifierSaver = new YamlConfiguration();
+//            try {
+//                modifierSaver.load(configuration.getString("attribute."+value.getKey().getNamespace()+"."+value.getKey().getKey()+".modifiers"));
+//            } catch (IOException | InvalidConfigurationException ioException) {
+//                ioException.printStackTrace();
+//                logger.warning("Failed to sync player " + data.getPlayer().getName() + "'s attribute's modifiers!");
+//            }
+//            data.getPlayer().getAttribute(value).addModifier();
+//            modifierSaver.set("modifiers",player.getAttribute(value).getModifiers());
+//            configuration.set("attribute."+value.getKey().getNamespace()+"."+value.getKey().getKey()+".modifiers",modifierSaver.saveToString());
+        }
+    }
+
+    @NotNull
+    @Sync(field = "attributes", type = SyncType.SAVE)
+    public SyncDataContainer savePlayerAttribute(@NotNull Player player) {
+        YamlConfiguration configuration = new YamlConfiguration();
+        for (Attribute value : Attribute.values()) {
+            configuration.set("attribute." + value.getKey().getNamespace() + "." + value.getKey().getKey() + ".base", player.getAttribute(value).getBaseValue());
+            YamlConfiguration modifierSaver = new YamlConfiguration();
+            modifierSaver.set("modifiers", player.getAttribute(value).getModifiers());
+            configuration.set("attribute." + value.getKey().getNamespace() + "." + value.getKey().getKey() + ".modifiers", modifierSaver.saveToString());
+        }
+        return SyncDataContainer.builder()
+                .player(player)
+                .data(configuration.saveToString()).build();
     }
 
 }
