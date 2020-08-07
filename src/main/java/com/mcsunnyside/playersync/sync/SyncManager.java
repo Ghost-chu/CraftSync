@@ -3,6 +3,7 @@ package com.mcsunnyside.playersync.sync;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -45,8 +46,15 @@ public class SyncManager {
     }
 
     public void callSave(@NotNull Player player, @NotNull SyncTime syncTime) {
+        this.callSave(player, syncTime, null);
+    }
+
+    public void callSave(@NotNull Player player, @NotNull SyncTime syncTime, @Nullable String field) {
         Map<String, SyncDataContainer> table = new HashMap<>();
         registers.forEach(reg -> {
+            if (field != null && !reg.getSync().field().equals(field)) {
+                return;
+            }
             if (!ArrayUtils.contains(reg.getSync().sync(), syncTime)) {
                 return;
             }
