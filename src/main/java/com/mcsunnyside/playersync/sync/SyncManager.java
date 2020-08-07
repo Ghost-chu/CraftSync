@@ -1,11 +1,12 @@
 package com.mcsunnyside.playersync.sync;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class SyncManager {
@@ -22,5 +23,42 @@ public class SyncManager {
             logger.info("Successfully registered: " + sync.field() + " for Type=" + sync.type() + " SyncTimes="
                     + Arrays.toString(sync.sync()));
         }
+    }
+
+    public void callLoad(@NotNull String field, @NotNull Player player, @NotNull String data, @NotNull SyncTime syncTime) {
+        registers.forEach(reg -> {
+            if (!reg.getSync().field().equals(field)) {
+                return;
+            }
+            if (!ArrayUtils.contains(reg.getSync().sync(), syncTime)) {
+                return;
+            }
+            if (reg.getSync().type() != SyncType.LOAD) {
+                return;
+            }
+            try {
+                reg.getMethod().invoke(reg.getModuleObject(), SyncDataContainer.builder().player(player).data(data).build());
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void callSave(@NotNull Player player, @NotNull SyncTime syncTime) {
+        Map<String, SyncDataContainer> table = new HashMap<>();
+        registers.forEach(reg -> {
+            if (!ArrayUtils.contains(reg.getSync().sync(), syncTime)) {
+                return;
+            }
+            if (reg.getSync().type() != SyncType.SAVE) {
+                return;
+            }
+            try {
+                SyncDataContainer container = (SyncDataContainer) reg.getMethod().invoke(reg.getModuleObject(), player);
+                table.put(reg.getSync().field(), container);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
