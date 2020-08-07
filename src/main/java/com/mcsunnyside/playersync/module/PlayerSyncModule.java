@@ -162,5 +162,40 @@ public class PlayerSyncModule implements SyncModule {
                 .build();
     }
 
+    @Sync(field = "enderchest", type = SyncType.LOAD)
+    public void loadPlayerEnderChest(@NotNull SyncDataContainer data) {
+        YamlConfiguration configuration = new YamlConfiguration();
+        try {
+            configuration.load(data.getData());
+        } catch (IOException | InvalidConfigurationException ioException) {
+            ioException.printStackTrace();
+            logger.warning("Failed to sync player " + data.getPlayer().getName() + "'s enderchest!");
+        }
+        //noinspection unchecked
+        List<ItemStack> contents = (List<ItemStack>) configuration.getList("enderchest");
+        data.getPlayer().getInventory().clear();
+        if (contents != null) {
+            data.getPlayer().getEnderChest().setContents(contents.toArray(new ItemStack[0]));
+        }
+    }
+
+    @NotNull
+    @Sync(field = "enderchest", type = SyncType.SAVE)
+    public SyncDataContainer savePlayerEnderChest(@NotNull Player player) {
+        List<ItemStack> contents = new ArrayList<>();
+        for (ItemStack stack : player.getEnderChest().getContents()) {
+            //noinspection ConstantConditions
+            if (stack == null) { //Filter NULL
+                stack = new ItemStack(Material.AIR);
+            }
+            contents.add(stack);
+        }
+        YamlConfiguration configuration = new YamlConfiguration();
+        configuration.set("enderchest", contents);
+        return SyncDataContainer.builder()
+                .player(player)
+                .data(configuration.saveToString())
+                .build();
+    }
 
 }
