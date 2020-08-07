@@ -49,7 +49,7 @@ public class SyncManager {
         this.callSave(player, syncTime, null);
     }
 
-    public void callSave(@NotNull Player player, @NotNull SyncTime syncTime, @Nullable String field) {
+    public Map<String, SyncDataContainer> callSave(@NotNull Player player, @NotNull SyncTime syncTime, @Nullable String field) {
         Map<String, SyncDataContainer> table = new HashMap<>();
         registers.forEach(reg -> {
             if (field != null && !reg.getSync().field().equals(field)) {
@@ -68,5 +68,6 @@ public class SyncManager {
                 e.printStackTrace();
             }
         });
+        return table;
     }
 }
