@@ -55,8 +55,8 @@ public class PlayerSyncModule implements SyncModule {
 
     @Sync(field = "exp", type = SyncType.LOAD)
     public void loadPlayerExp(@NotNull SyncDataContainer data) {
-        float exp = Float.parseFloat(data.getData());
-        data.getPlayer().setExp(exp);
+        int exp = Integer.parseInt(data.getData());
+        data.getPlayer().setTotalExperience(exp);
     }
 
     @NotNull
@@ -64,7 +64,7 @@ public class PlayerSyncModule implements SyncModule {
     public SyncDataContainer savePlayerExp(@NotNull Player player) {
         return SyncDataContainer.builder()
                 .player(player)
-                .data(String.valueOf(player.getExp()))
+                .data(String.valueOf(player.getTotalExperience()))
                 .build();
     }
 
