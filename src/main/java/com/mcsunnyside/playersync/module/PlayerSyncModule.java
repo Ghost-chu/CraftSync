@@ -4,15 +4,19 @@ import com.mcsunnyside.playersync.sync.Sync;
 import com.mcsunnyside.playersync.sync.SyncDataContainer;
 import com.mcsunnyside.playersync.sync.SyncModule;
 import com.mcsunnyside.playersync.sync.SyncType;
+import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class PlayerSyncModule implements SyncModule {
@@ -105,5 +109,58 @@ public class PlayerSyncModule implements SyncModule {
         configuration.set("effects", player.getActivePotionEffects());
         return SyncDataContainer.builder().player(player).data(configuration.saveToString()).build();
     }
+
+    @Sync(field = "inventory", type = SyncType.LOAD)
+    public void loadPlayerInventory(@NotNull SyncDataContainer data) {
+        YamlConfiguration configuration = new YamlConfiguration();
+        try {
+            configuration.load(data.getData());
+        } catch (IOException | InvalidConfigurationException ioException) {
+            ioException.printStackTrace();
+            logger.warning("Failed to sync player " + data.getPlayer().getName() + "'s inventory!");
+        }
+        //noinspection unchecked
+        List<ItemStack> contents = (List<ItemStack>) configuration.getList("inventory.contents");
+        //noinspection unchecked
+        List<ItemStack> extras = (List<ItemStack>) configuration.getList("inventory.extras");
+        data.getPlayer().getInventory().clear();
+        if (contents != null) {
+            data.getPlayer().getInventory().setContents(contents.toArray(new ItemStack[0]));
+        }
+        if (extras != null) {
+            data.getPlayer().getInventory().setExtraContents(extras.toArray(new ItemStack[0]));
+        }
+    }
+
+    @NotNull
+    @Sync(field = "inventory", type = SyncType.SAVE)
+    public SyncDataContainer savePlayerInventory(@NotNull Player player) {
+        List<ItemStack> contents = new ArrayList<>();
+        for (ItemStack stack : player.getInventory().getContents()) {
+            //noinspection ConstantConditions
+            if (stack == null) { //Filter NULL
+                stack = new ItemStack(Material.AIR);
+            }
+            contents.add(stack);
+        }
+        List<ItemStack> extras = new ArrayList<>();
+        for (ItemStack stack : player.getInventory().getExtraContents()) {
+            //noinspection ConstantConditions
+            if (stack == null) { //Filter NULL
+                stack = new ItemStack(Material.AIR);
+            }
+            extras.add(stack);
+        }
+
+        YamlConfiguration configuration = new YamlConfiguration();
+        configuration.set("inventory.contents", contents);
+        configuration.set("inventory.extras", extras);
+
+        return SyncDataContainer.builder()
+                .player(player)
+                .data(configuration.saveToString())
+                .build();
+    }
+
 
 }
