@@ -3,6 +3,12 @@ package com.mcsunnyside.playersync.sync;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.annotation.*;
+
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@Inherited
 public @interface Sync {
    /**
     * Unique ID for Sync Item, used as column name
