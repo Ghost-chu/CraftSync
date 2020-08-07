@@ -1,0 +1,4 @@
+name: PlayerSync
+version: ${project.version}
+main: com.mcsunnyside.playersync.PlayerSync
+api-version: 1.16
