@@ -37,4 +37,35 @@ public class PlayerSyncModule implements SyncModule {
                 .data(String.valueOf(player.getExp()))
                 .build();
     }
+
+    @Sync(field = "air", type = SyncType.LOAD)
+    public void loadPlayerAir(@NotNull SyncDataContainer data) {
+        int air = Integer.parseInt(data.getData());
+        data.getPlayer().setRemainingAir(air);
+    }
+
+    @NotNull
+    @Sync(field = "air", type = SyncType.SAVE)
+    public SyncDataContainer savePlayerAir(@NotNull Player player) {
+        return SyncDataContainer.builder()
+                .player(player)
+                .data(String.valueOf(player.getRemainingAir()))
+                .build();
+    }
+
+    @Sync(field = "maxair", type = SyncType.LOAD)
+    public void loadPlayerMaxAir(@NotNull SyncDataContainer data) {
+        int air = Integer.parseInt(data.getData());
+        data.getPlayer().setMaximumAir(air);
+    }
+
+    @NotNull
+    @Sync(field = "maxair", type = SyncType.SAVE)
+    public SyncDataContainer savePlayerMaxAir(@NotNull Player player) {
+        return SyncDataContainer.builder()
+                .player(player)
+                .data(String.valueOf(player.getMaximumAir()))
+                .build();
+    }
+
 }
