@@ -1,4 +1,4 @@
-name: PlayerSync
+name: CraftSync
 version: ${project.version}
-main: com.mcsunnyside.playersync.PlayerSync
-api-version: 1.16
+main: com.mcsunnyside.playersync.CraftSync
+api-version: 1.13

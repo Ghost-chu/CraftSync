@@ -2,7 +2,7 @@ package com.mcsunnyside.craftsync;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class PlayerSync extends JavaPlugin {
+public final class CraftSync extends JavaPlugin {
 
     @Override
     public void onEnable() {

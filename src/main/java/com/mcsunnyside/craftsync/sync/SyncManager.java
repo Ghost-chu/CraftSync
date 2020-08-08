@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 public class SyncManager {
     private final Set<SyncModuleRegister> registers = new HashSet<>();
-    private final Logger logger = Logger.getLogger("PlayerSync");
+    private final Logger logger = Logger.getLogger("CraftSync");
 
     public void register(@NotNull SyncModule module) {
         for (Method declaredMethod : module.getClass().getDeclaredMethods()) {

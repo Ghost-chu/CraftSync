@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class PlayerSyncModule implements SyncModule {
-    private final Logger logger = Logger.getLogger("PlayerSync");
+    private final Logger logger = Logger.getLogger("CraftSync");
 
     @Sync(field = "hp", type = SyncType.LOAD)
     public void loadPlayerHealth(@NotNull SyncDataContainer data) {
