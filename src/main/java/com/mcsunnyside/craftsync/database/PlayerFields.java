@@ -1,4 +1,4 @@
-package com.mcsunnyside.playersync.database;
+package com.mcsunnyside.craftsync.database;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

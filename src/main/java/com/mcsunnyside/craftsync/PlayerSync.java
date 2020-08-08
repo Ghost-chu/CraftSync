@@ -1,4 +1,4 @@
-package com.mcsunnyside.playersync;
+package com.mcsunnyside.craftsync;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

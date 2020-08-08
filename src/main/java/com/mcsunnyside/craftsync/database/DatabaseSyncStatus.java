@@ -1,4 +1,4 @@
-package com.mcsunnyside.playersync.database;
+package com.mcsunnyside.craftsync.database;
 
 public enum DatabaseSyncStatus {
     IDLE,

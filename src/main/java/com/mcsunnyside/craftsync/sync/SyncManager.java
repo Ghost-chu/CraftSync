@@ -1,4 +1,4 @@
-package com.mcsunnyside.playersync.sync;
+package com.mcsunnyside.craftsync.sync;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.entity.Player;

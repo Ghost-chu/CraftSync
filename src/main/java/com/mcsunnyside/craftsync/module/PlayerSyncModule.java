@@ -1,9 +1,9 @@
-package com.mcsunnyside.playersync.module;
+package com.mcsunnyside.craftsync.module;
 
-import com.mcsunnyside.playersync.sync.Sync;
-import com.mcsunnyside.playersync.sync.SyncDataContainer;
-import com.mcsunnyside.playersync.sync.SyncModule;
-import com.mcsunnyside.playersync.sync.SyncType;
+import com.mcsunnyside.craftsync.sync.Sync;
+import com.mcsunnyside.craftsync.sync.SyncDataContainer;
+import com.mcsunnyside.craftsync.sync.SyncModule;
+import com.mcsunnyside.craftsync.sync.SyncType;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.InvalidConfigurationException;
