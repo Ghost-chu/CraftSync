@@ -48,7 +48,7 @@ public class SyncManager {
     public void callSave(@NotNull Player player, @NotNull SyncTime syncTime) {
         this.callSave(player, syncTime, null);
     }
-
+    @NotNull
     public Map<String, SyncDataContainer> callSave(@NotNull Player player, @NotNull SyncTime syncTime, @Nullable String field) {
         Map<String, SyncDataContainer> table = new HashMap<>();
         registers.forEach(reg -> {
