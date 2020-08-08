@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 
@@ -11,8 +12,12 @@ import java.lang.reflect.Method;
 @Builder
 @Data
 @EqualsAndHashCode
+
 public class SyncModuleRegister {
+    @NotNull
     private Method method;
+    @NotNull
     private SyncModule moduleObject;
+    @NotNull
     private Sync sync;
 }
